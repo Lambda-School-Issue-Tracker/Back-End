@@ -78,17 +78,11 @@ function validateRegisterBody(req, res, next) {
   ) {
     res.status(400).json({ message: "A password is required" });
   } else if (
-    !body.First_Name ||
-    body.First_Name.length === 0 ||
-    /^\s*$/.test(body.First_Name)
+    !body.Full_Name ||
+    body.Full_Name.length === 0 ||
+    /^\s*$/.test(body.Full_Name)
   ) {
     res.status(400).json({ message: "Please, enter your first name" });
-  } else if (
-    !body.Last_Name ||
-    body.Last_Name.length === 0 ||
-    /^\s*$/.test(body.Last_Name)
-  ) {
-    res.status(400).json({ message: "Please, enter your last name" });
   } else if (!body.Role || body.Role.length === 0 || /^\s*$/.test(body.Role)) {
     res.status(400).json({ message: "A Role is required for new users" });
   } else {

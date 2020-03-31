@@ -10,7 +10,7 @@ module.exports = {
 };
 
 function add(user) {
-  console.log("In User Model:", user);
+  //   console.log("In User Model:", user);
   return db("Users").insert(user);
 }
 
@@ -29,11 +29,12 @@ function findById(id) {
 }
 
 function update(User_Id, changes) {
+  console.log("IN MODEL:", User_Id, changes);
   return db("Users")
     .where({ User_Id })
     .update(changes)
     .then(update => {
-      return finById(User_Id);
+      return findById(User_Id);
     });
 }
 
@@ -42,6 +43,6 @@ function remove(id) {
     .where("User_Id", id)
     .del()
     .then(track => {
-      return finById(id);
+      return findById(id);
     });
 }
