@@ -14,6 +14,17 @@ exports.up = function(knex) {
       tbl.string("Cohort");
     })
 
+    .createTable("Students", tbl => {
+      tbl.increments("Student_Id");
+
+      tbl.string("Full_Name").notNullable();
+      tbl.string("Track").notNullable();
+      tbl.string("Cohort").notNullable();
+      tbl.string("TL_Name").notNullable();
+      tbl.string("SL1_Name").notNullable();
+      tbl.string("SL2_Name").notNullable();
+    })
+
     .createTable("Tickets", tbl => {
       tbl.increments("Ticket_Id");
 
@@ -53,6 +64,7 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
+    .dropTableIfExists("Students")
     .dropTableIfExists("Users")
     .dropTableIfExists("Tickets")
     .dropTableIfExists("Comment_Replies");
