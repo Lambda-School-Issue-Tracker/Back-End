@@ -31,9 +31,9 @@ exports.up = function(knex) {
       tbl.string("SL_Efforts_Made");
       tbl.string("Comments");
       tbl
-        .integer("Comment_Reply_Id")
-        .references("Comment_Reply_Id")
-        .inTable("Comment_Replies")
+        .integer("Creators_User_Id")
+        .references("User_Id")
+        .inTable("Users")
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
     })
@@ -42,6 +42,12 @@ exports.up = function(knex) {
       tbl.increments("Comment_Reply_Id");
 
       tbl.string("Comment_Reply_Body");
+      tbl
+        .integer("Ticket_Id")
+        .references("Ticket_Id")
+        .inTable("Tickets")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
     });
 };
 
