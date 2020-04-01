@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const db = require("./ticket-model");
+const userDB = require("../users/users-model");
 const restricted = require("../auth/auth-router");
 
 // Endpoints: /api/tickets
@@ -23,20 +24,113 @@ router.post("/", restricted, validateTicketBody, (req, res) => {
 });
 
 // Get all Tickets:
+router.get("/", restricted, (req, res) => {
+  db.find()
+    .then(tickets => {
+      res.status(200).json({ tickets });
+    })
+    .catch(err => {
+      res.status(500).json({
+        errorMessage:
+          "Sorry an error occured while fetching tickets. Please, check with your database administrator about this error",
+        err
+      });
+    });
+});
 
 // Find Tickets by User_Id:
+router.get("/user/:id", restricted, validateUserId, (req, res) => {
+  let id = req.params.id;
+
+  db.findTicketsByUserId(id)
+    .then(tickets => {
+      res.status(200).json({ tickets });
+    })
+    .catch(err => {
+      res.status(500).json({
+        errorMessage:
+          "Sorry an error occured while trying to find your tickets. Please, report this error to your database adminstrator",
+        err
+      });
+    });
+});
 
 // Find Tickets by Cohort:
+router.get("/cohort", restricted, (req, res) => {
+  let { Cohort } = req.body;
+
+  db.findBy({ Cohort })
+    .then(tickets => {
+      res.status(200).json({ tickets });
+    })
+    .catch(err => {
+      res.status(500).json(
+        {
+          errorMessage:
+            "Sorry an error occurred when trying to find tickets by cohort. Please, report this error to your database administrator"
+        },
+        err
+      );
+    });
+});
 
 // Find Tickets by Track:
+router.get("/track", restricted, (req, res) => {
+  let { Track } = req.body;
+
+  db.findBy({ Track })
+    .then(tickets => {
+      res.status(200).json({ tickets });
+    })
+    .catch(err => {
+      res.status(500).json(
+        {
+          errorMessage:
+            "Sorry an error occurred when trying to find tickets by cohort. Please, report this error to your database administrator"
+        },
+        err
+      );
+    });
+});
 
 // Update Tickets
+router.put("/:id", restricted, validateTicketId, (req, res) => {
+  let id = req.params.id;
+  let body = req.body;
+
+  db.update(id, body)
+    .then(changes => {
+      res.status(202).json({ changes });
+    })
+    .catch(err => {
+      res.status(500).json({
+        errorMessage:
+          "Sorry, something went wrong while trying to update your ticket. Please, check with your database administrator about this error.",
+        err
+      });
+    });
+});
 
 // Delete Tickets
+router.delete("/:id", restricted, validateTicketId, (req, res) => {
+  let id = req.params.id;
+
+  db.remove(id)
+    .then(ticket => {
+      res.status(200).json({ ticket });
+    })
+    .catch(err => {
+      res.status(500).json({
+        errorMessage:
+          "Sorry an error occured while trying to delete this ticket. Please, check with your database administrator about this error",
+        err
+      });
+    });
+});
 
 // Middleware:
 
-function validateUserId(req, res, next) {
+function validateTicketId(req, res, next) {
   let id = req.params.id;
 
   db.findById(id).then(item => {
@@ -44,7 +138,7 @@ function validateUserId(req, res, next) {
       next();
     } else {
       res.status(404).json({
-        errorMessage: `Sorry, there isn't a user with the id of ${id}.`
+        errorMessage: `Sorry, there isn't a ticket with the id of ${id}.`
       });
     }
   });
@@ -103,6 +197,20 @@ function validateTicketBody(req, res, next) {
     console.log("Validation completed!");
     next();
   }
+}
+
+function validateUserId(req, res, next) {
+  let id = req.params.id;
+
+  userDB.findById(id).then(item => {
+    if (item) {
+      next();
+    } else {
+      res.status(404).json({
+        errorMessage: `Sorry, there isn't a user with the id of ${id}.`
+      });
+    }
+  });
 }
 
 module.exports = router;

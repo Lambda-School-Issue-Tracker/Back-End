@@ -6,6 +6,23 @@ const restricted = require("../auth/restricted-middleware");
 
 // Endpoints: /api/users
 
+// find all users:
+router.get("/", restricted, (req, res) => {
+  db.find()
+    .then(users => {
+      res.status(200).json({ users });
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({
+          errorMessage:
+            "Sorry, an error occured while fetching users. Please, check with your database administrator about this error",
+          err
+        });
+    });
+});
+
 // find User by Id:
 router.get("/:id", restricted, validateId, (req, res) => {
   let id = req.params.id;
