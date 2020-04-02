@@ -1,6 +1,5 @@
 # Back-End
 
-
 END POINTS
 
 Root: / https://lambda-issue-tracker.herokuapp.com/ 
