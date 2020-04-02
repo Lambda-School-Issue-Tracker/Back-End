@@ -81,7 +81,6 @@ https://lambda-issue-tracker.herokuapp.com/api/tickets/cohort
  "Cohort": "Web29"
 }
 
-
 COMMENT REPLIES
        
 CREATE: /
