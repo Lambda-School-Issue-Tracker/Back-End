@@ -52,7 +52,7 @@ exports.seed = function(knex) {
 
   seedUser.map(user => {
     const hash = bcrypt.hashSync(user.Password, 10);
-    user.password = hash;
+    user.Password = hash;
   });
   // console.log(newseedUsers);
   return knex("Users").insert(seedUser);
