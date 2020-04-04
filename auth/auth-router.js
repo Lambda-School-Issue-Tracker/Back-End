@@ -38,6 +38,7 @@ router.post("/login", validateLogInBody, (req, res) => {
         res.status(200).json({
           message: `Welcome ${user.Full_Name}! We're happy to see you again!`,
           Role: user.Role,
+          User_Id: user.User_Id,
           token
         });
       } else {
