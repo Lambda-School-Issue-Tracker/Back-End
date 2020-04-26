@@ -11,10 +11,8 @@ const secrets = require("../config/secrets");
 // End Point:
 router.post("/register", validateRegisterBody, (req, res) => {
   let user = req.body;
-  const hash = bcrypt.hashSync(user.Password, 10);
-  const lowPass = user.Password.toLowerCase();
+  const hash = bcrypt.hashSync(user.Password.toLowerCase(), 10);
   const lowEmail = user.Email.toLowerCase();
-  user.Password = lowPass;
   user.Email = lowEmail;
   user.Password = hash;
 
@@ -53,6 +51,7 @@ router.post("/login", validateLogInBody, (req, res) => {
           token,
         });
       } else {
+        console.log("FAILED:", Password, user.Password);
         res.status(401).json({ message: "Invalid Credentials" });
       }
     })
