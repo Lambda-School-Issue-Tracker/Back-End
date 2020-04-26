@@ -35,6 +35,11 @@ router.post("/register", validateRegisterBody, (req, res) => {
 router.post("/login", validateLogInBody, (req, res) => {
   let { Email, Password } = req.body;
 
+  const lowPass = Password.toLowerCase();
+  const lowEmail = Email.toLowerCase();
+  Password = lowPass;
+  Email = lowEmail;
+
   db.findBy({ Email })
     .first()
     .then((user) => {
