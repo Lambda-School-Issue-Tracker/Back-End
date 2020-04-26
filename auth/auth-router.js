@@ -12,16 +12,22 @@ const secrets = require("../config/secrets");
 router.post("/register", validateRegisterBody, (req, res) => {
   let user = req.body;
   const hash = bcrypt.hashSync(user.Password, 10);
+  const lowPass = user.Password.toLowerCase();
+  const lowEmail = user.Email.toLowerCase();
+  user.Password = lowPass;
+  user.Email = lowEmail;
   user.Password = hash;
-  console.log(user);
+
+  console.log("Last:", user.Password, user.Email);
+
   db.add(user)
-    .then(saved => {
+    .then((saved) => {
       res.status(201).json(saved);
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({
         message: "Registration Failed, check with database administrator",
-        error
+        error,
       });
     });
 });
@@ -31,7 +37,7 @@ router.post("/login", validateLogInBody, (req, res) => {
 
   db.findBy({ Email })
     .first()
-    .then(user => {
+    .then((user) => {
       if (user && bcrypt.compareSync(Password, user.Password)) {
         const token = tokenGenerator(user);
 
@@ -39,17 +45,17 @@ router.post("/login", validateLogInBody, (req, res) => {
           message: `Welcome ${user.Full_Name}! We're happy to see you again!`,
           Role: user.Role,
           User_Id: user.User_Id,
-          token
+          token,
         });
       } else {
         res.status(401).json({ message: "Invalid Credentials" });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({
         Message:
           "An error occured while trying to login. Please, check with the database administrator",
-        err
+        err,
       });
     });
 });
@@ -58,11 +64,11 @@ router.post("/login", validateLogInBody, (req, res) => {
 function tokenGenerator(user) {
   const payload = {
     Email: user.Email,
-    Role: user.Role
+    Role: user.Role,
   };
   console.log(payload.Role);
   const options = {
-    expiresIn: "1d"
+    expiresIn: "1d",
   };
 
   return jwt.sign(payload, secrets.jwtSecret, options);
