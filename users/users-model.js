@@ -6,11 +6,10 @@ module.exports = {
   findBy,
   findById,
   update,
-  remove
+  remove,
 };
 
 function add(user) {
-  //   console.log("In User Model:", user);
   return db("Users").insert(user);
 }
 
@@ -23,9 +22,7 @@ function findBy(filter) {
 }
 
 function findById(id) {
-  return db("Users")
-    .where("User_Id", id)
-    .first();
+  return db("Users").where("User_Id", id).first();
 }
 
 function update(User_Id, changes) {
@@ -33,7 +30,7 @@ function update(User_Id, changes) {
   return db("Users")
     .where({ User_Id })
     .update(changes)
-    .then(update => {
+    .then((update) => {
       return findById(User_Id);
     });
 }
@@ -42,7 +39,7 @@ function remove(id) {
   return db("Users")
     .where("User_Id", id)
     .del()
-    .then(track => {
+    .then((track) => {
       return findById(id);
     });
 }
